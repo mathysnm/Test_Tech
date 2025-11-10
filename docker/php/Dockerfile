@@ -55,9 +55,14 @@ WORKDIR /var/www/html
 # Cette ligne est utile pour les builds de production
 COPY ./backend /var/www/html
 
-# Copie du script d'entrypoint
+# Copie du script d'entrypoint et start-server
 COPY ./docker/php/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+COPY ./docker/php/start-server.sh /usr/local/bin/start-server.sh
+# Conversion des fins de ligne Windows (CRLF) en Unix (LF)
+RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh && \
+    sed -i 's/\r$//' /usr/local/bin/start-server.sh && \
+    chmod +x /usr/local/bin/entrypoint.sh && \
+    chmod +x /usr/local/bin/start-server.sh
 
 # Permissions
 RUN chown -R www-data:www-data /var/www/html

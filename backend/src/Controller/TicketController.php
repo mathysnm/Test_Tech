@@ -174,13 +174,39 @@ class TicketController extends AbstractController
 
     /**
      * Récupère un ticket par son ID
+     * Authentification OBLIGATOIRE - user_id requis
+     * Filtrage par rôle :
+     * - CLIENT : Peut voir uniquement ses propres tickets
+     * - AGENT : Peut voir uniquement les tickets qui lui sont assignés
+     * - MANAGER : Peut voir tous les tickets
      * 
      * @param int $id
+     * @param Request $request
      * @return JsonResponse
      */
     #[Route('/{id}', name: 'show', methods: ['GET'], requirements: ['id' => '\d+'])]
-    public function show(int $id): JsonResponse
+    public function show(int $id, Request $request): JsonResponse
     {
+        // Récupérer l'ID de l'utilisateur depuis les query params
+        $userId = $request->query->get('user_id');
+        
+        // Authentification OBLIGATOIRE
+        if (!$userId) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Authentication required. Please provide user_id parameter.'
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $user = $this->userRepository->find($userId);
+        
+        if (!$user) {
+            return $this->json([
+                'success' => false,
+                'message' => 'User not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         $ticket = $this->ticketRepository->find($id);
 
         if (!$ticket) {
@@ -188,6 +214,21 @@ class TicketController extends AbstractController
                 'success' => false,
                 'message' => 'Ticket not found'
             ], Response::HTTP_NOT_FOUND);
+        }
+
+        // Vérifier les permissions selon le rôle
+        $hasAccess = match($user->getRole()) {
+            'CLIENT' => $ticket->getCreator() === $user,
+            'AGENT' => $ticket->getAssignee() === $user,
+            'MANAGER' => true,
+            default => false
+        };
+
+        if (!$hasAccess) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Access denied. You do not have permission to view this ticket.'
+            ], Response::HTTP_FORBIDDEN);
         }
 
         return $this->json([

@@ -16,7 +16,24 @@
         <h2 class="selection-title">Sélectionnez votre profil</h2>
         <p class="selection-description">Choisissez le type de compte pour accéder à l'application</p>
 
-        <div class="user-cards">
+        <!-- Message de chargement -->
+        <div v-if="loading" class="loading-message">
+          <div class="spinner"></div>
+          <p>Chargement des utilisateurs...</p>
+        </div>
+
+        <!-- Message d'erreur -->
+        <div v-else-if="error" class="error-message">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <p>{{ error }}</p>
+        </div>
+
+        <!-- Liste des utilisateurs -->
+        <div v-else class="user-cards">
           <div 
             v-for="user in availableUsers" 
             :key="user.id"
@@ -76,48 +93,40 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import * as userService from '../services/userService'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
 const selectedUser = ref(null)
+const availableUsers = ref([])
+const loading = ref(false)
+const error = ref(null)
 
-// Utilisateurs disponibles (simulés depuis la base de données)
-const availableUsers = ref([
-  {
-    id: 1,
-    name: 'Marie Dubois',
-    email: 'marie.dubois@example.com',
-    role: 'CLIENT'
-  },
-  {
-    id: 2,
-    name: 'Jean Martin',
-    email: 'jean.martin@example.com',
-    role: 'CLIENT'
-  },
-  {
-    id: 3,
-    name: 'Sophie Bernard',
-    email: 'sophie.bernard@example.com',
-    role: 'AGENT'
-  },
-  {
-    id: 4,
-    name: 'Pierre Dupont',
-    email: 'pierre.dupont@example.com',
-    role: 'AGENT'
-  },
-  {
-    id: 5,
-    name: 'Thomas Petit',
-    email: 'thomas.petit@example.com',
-    role: 'MANAGER'
+// Charger les utilisateurs depuis l'API au montage du composant
+onMounted(async () => {
+  try {
+    loading.value = true
+    error.value = null
+    
+    const response = await userService.fetchUsers()
+    
+    if (response.success) {
+      availableUsers.value = response.data
+    } else {
+      error.value = 'Impossible de charger les utilisateurs'
+      console.error('Failed to load users:', response.message)
+    }
+  } catch (err) {
+    error.value = 'Erreur de connexion au serveur'
+    console.error('Error loading users:', err)
+  } finally {
+    loading.value = false
   }
-])
+})
 
 const selectUser = (user) => {
   selectedUser.value = user
@@ -322,6 +331,52 @@ const handleLogin = async () => {
 .btn-login:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.loading-message,
+.error-message {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--color-text-secondary);
+}
+
+.loading-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: var(--color-error);
+}
+
+.error-message svg {
+  color: var(--color-error);
+}
+
+.error-message p {
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 .login-footer {

@@ -74,7 +74,7 @@
         <!-- Taux de résolution équipe -->
         <div class="kpi-card">
           <div class="kpi-header">
-            <span class="kpi-label">Taux de Résolution</span>
+            <span class="kpi-label">Taux de Résolution Moyen/Jour</span>
             <div class="kpi-icon-wrapper kpi-success">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="20 6 9 17 4 12"></polyline>
@@ -230,10 +230,12 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
 import ticketService from '../services/ticketService'
 import axios from 'axios'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
 // États
 const loading = ref(true)
@@ -274,7 +276,13 @@ async function loadDashboardData() {
     loading.value = true
     error.value = null
 
-    const userId = 5 // MANAGER ID - Thomas Petit
+    // Récupérer l'ID du manager depuis le store auth
+    const authStore = useAuthStore()
+    const userId = authStore.currentUser?.id
+
+    if (!userId) {
+      throw new Error('Utilisateur non authentifié')
+    }
 
     // Charger les stats générales
     const statsResponse = await ticketService.getStats(userId)
@@ -318,12 +326,42 @@ function calculateAnalytics(tickets) {
   const last7Days = tickets.filter(t => new Date(t.createdAt) >= weekAgo)
   analytics.value.avgTicketsPerDay = Math.round(last7Days.length / 7)
 
-  const resolvedTickets = tickets.filter(t => t.status === 'RESOLVED' || t.status === 'CLOSED')
+  // Calculer le taux de résolution moyen quotidien sur les 7 derniers jours
+  // Taux = (tickets résolus ce jour / tickets ouverts ce jour) × 100
+  const dailyRates = []
+  for (let i = 0; i < 7; i++) {
+    const dayStart = new Date(today.getTime() - i * 24 * 60 * 60 * 1000)
+    const dayEnd = new Date(dayStart.getTime() + 24 * 60 * 60 * 1000)
+    
+    // Tickets OUVERTS ce jour (createdAt entre dayStart et dayEnd)
+    const ticketsOpenedOnDay = tickets.filter(t => {
+      const created = new Date(t.createdAt)
+      return created >= dayStart && created < dayEnd
+    })
+    
+    // Tickets RÉSOLUS ce jour (updatedAt entre dayStart et dayEnd)
+    const ticketsResolvedOnDay = tickets.filter(t => 
+      (t.status === 'RESOLVED' || t.status === 'CLOSED') && 
+      new Date(t.updatedAt) >= dayStart && 
+      new Date(t.updatedAt) < dayEnd
+    )
+    
+    // Calculer le taux seulement si des tickets ont été ouverts ce jour
+    if (ticketsOpenedOnDay.length > 0) {
+      const dayRate = (ticketsResolvedOnDay.length / ticketsOpenedOnDay.length) * 100
+      dailyRates.push(dayRate)
+    } else if (ticketsResolvedOnDay.length > 0) {
+      // Si des tickets résolus mais aucun ouvert, considérer comme 100%+ (excellent)
+      dailyRates.push(100)
+    }
+  }
   
-  analytics.value.resolutionRate = tickets.length > 0 
-    ? Math.round((resolvedTickets.length / tickets.length) * 100)
+  // Taux moyen sur les 7 derniers jours
+  analytics.value.resolutionRate = dailyRates.length > 0
+    ? Math.round(dailyRates.reduce((sum, rate) => sum + rate, 0) / dailyRates.length)
     : 0
 
+  const resolvedTickets = tickets.filter(t => t.status === 'RESOLVED' || t.status === 'CLOSED')
   analytics.value.resolvedToday = resolvedTickets.filter(t => new Date(t.updatedAt) >= today).length
 
   const resolvedWithTime = resolvedTickets.filter(t => t.updatedAt && t.createdAt)

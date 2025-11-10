@@ -205,7 +205,12 @@ const filteredTickets = computed(() => {
     result = result.filter(ticket => ticket.priority === filterPriority.value)
   }
 
-  return result
+  // Trier par date de création décroissante (plus récents en premier)
+  return result.sort((a, b) => {
+    const dateA = new Date(a.createdAt)
+    const dateB = new Date(b.createdAt)
+    return dateB - dateA // Ordre décroissant
+  })
 })
 
 onMounted(async () => {

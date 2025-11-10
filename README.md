@@ -133,7 +133,7 @@ Peut : Dashboard complet, voir tous les tickets, statistiques équipe
 
 #### Scénario 2 : Traiter un ticket (AGENT)
 1. Se connecter : http://localhost:5173/login avec `sophie@test.fr`
-2. Voir la liste des tickets assignés
+2. Voir la liste des tickets assignés (triés du plus récent au plus ancien)
 3. Cliquer sur un ticket OPEN
 4. Changer statut : OPEN → IN_PROGRESS
 5. Ajouter commentaire : "Je prends en charge ce ticket"
@@ -148,7 +148,7 @@ Peut : Dashboard complet, voir tous les tickets, statistiques équipe
 3. Voir KPI :
    - Temps moyen résolution : **7.6 heures**
    - Tickets par jour : graphique 7 derniers jours
-   - Taux de résolution : **70%** (28/40)
+   - Taux de résolution : **57%** (moyenne quotidienne sur 7 jours)
    - Tickets en attente : **12** (5 OPEN + 7 IN_PROGRESS)
 4. Voir performance équipe (3 agents avec barres progression)
 5. Voir tickets par priorité (filtre HIGH/MEDIUM/LOW)
@@ -601,7 +601,8 @@ export function useNotifications() {
 1. **Temps moyen de résolution** : 7.6h (calculé sur 28 tickets RESOLVED)
    - Tendance : +5% vs hier (🔺) ou -10% (🔻)
 2. **Tickets par jour** : Graphique 7 derniers jours (Chart.js bar chart)
-3. **Taux de résolution** : 70% (28 RESOLVED / 40 total)
+3. **Taux de résolution** : 57% (moyenne quotidienne des tickets résolus / ouverts sur 7 jours)
+   - Calcul : Pour chaque jour, ratio (tickets résolus / tickets ouverts) puis moyenne
 4. **Tickets en attente** : 12 (5 OPEN + 7 IN_PROGRESS)
 
 **Graphiques** :
@@ -957,6 +958,8 @@ Peut : Dashboard complet, réassigner, voir tous les tickets
 - Clients : `jean@test.fr`, `claire@test.fr`
 - Agents : `pierre@test.fr`, `lucas@test.fr`
 
+**Note importante** : Les utilisateurs sont chargés dynamiquement depuis la base de données. L'interface de login affiche automatiquement tous les comptes disponibles avec leur rôle respectif.
+
 ### 🧪 Tester l'application
 
 #### Scénario 1 : Créer un ticket (CLIENT)
@@ -1005,6 +1008,17 @@ docker exec tickets_app php bin/console doctrine:query:sql \
 docker exec tickets_app php bin/console doctrine:query:sql \
   "SELECT action, details, created_at FROM application_log WHERE entity_type = 'Ticket' AND entity_id = 1"
 ```
+
+#### Scénario 5 : Vérifier le filtrage par rôle
+1. **CLIENT** : Ne peut voir que ses propres tickets
+   - Se connecter avec `marie@test.fr`
+   - Liste affiche uniquement les tickets créés par Marie
+2. **AGENT** : Ne peut voir que les tickets assignés
+   - Se connecter avec `sophie@test.fr`
+   - Liste affiche uniquement les tickets assignés à Sophie
+3. **MANAGER** : Peut voir tous les tickets
+   - Se connecter avec `thomas@test.fr`
+   - Liste affiche tous les tickets du système
 
 ### 🧹 Commandes utiles
 
