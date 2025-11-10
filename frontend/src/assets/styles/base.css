@@ -1,0 +1,168 @@
+/**
+ * Variables CSS - Thème professionnel juridique
+ * Palette : Navy & Gold
+ */
+
+:root {
+  /* Couleurs primaires */
+  --color-primary: #1e3a5f;        /* Navy foncé */
+  --color-primary-light: #2c5282;  /* Navy moyen */
+  --color-primary-dark: #1a2f4d;   /* Navy très foncé */
+  
+  --color-accent: #c59d5f;         /* Gold */
+  --color-accent-light: #d4b17d;   /* Gold clair */
+  --color-accent-dark: #b08a4c;    /* Gold foncé */
+  
+  /* Couleurs neutres */
+  --color-bg: #f8f9fa;             /* Background */
+  --color-surface: #ffffff;        /* Cartes/Surfaces */
+  --color-border: #e2e8f0;         /* Bordures */
+  
+  --color-text-primary: #1a202c;   /* Texte principal */
+  --color-text-secondary: #4a5568; /* Texte secondaire */
+  --color-text-muted: #718096;     /* Texte atténué */
+  
+  /* Couleurs statut */
+  --color-new: #3b82f6;            /* Bleu */
+  --color-in-progress: #f59e0b;    /* Orange */
+  --color-resolved: #10b981;       /* Vert */
+  --color-closed: #6b7280;         /* Gris */
+  
+  /* Couleurs priorité */
+  --color-low: #10b981;            /* Vert */
+  --color-medium: #3b82f6;         /* Bleu */
+  --color-high: #f59e0b;           /* Orange */
+  --color-urgent: #ef4444;         /* Rouge */
+  
+  /* Typographie */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  --font-size-xs: 0.75rem;         /* 12px */
+  --font-size-sm: 0.875rem;        /* 14px */
+  --font-size-base: 1rem;          /* 16px */
+  --font-size-lg: 1.125rem;        /* 18px */
+  --font-size-xl: 1.25rem;         /* 20px */
+  --font-size-2xl: 1.5rem;         /* 24px */
+  --font-size-3xl: 1.875rem;       /* 30px */
+  
+  /* Espacements */
+  --spacing-xs: 0.25rem;           /* 4px */
+  --spacing-sm: 0.5rem;            /* 8px */
+  --spacing-md: 1rem;              /* 16px */
+  --spacing-lg: 1.5rem;            /* 24px */
+  --spacing-xl: 2rem;              /* 32px */
+  --spacing-2xl: 3rem;             /* 48px */
+  
+  /* Bordures */
+  --radius-sm: 0.25rem;            /* 4px */
+  --radius-md: 0.5rem;             /* 8px */
+  --radius-lg: 0.75rem;            /* 12px */
+  --radius-full: 9999px;           /* Arrondi complet */
+  
+  /* Ombres */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 300ms ease-in-out;
+  --transition-slow: 500ms ease-in-out;
+}
+
+/**
+ * Reset CSS minimaliste
+ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+  min-height: 100vh;
+}
+
+#app {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/**
+ * Typographie de base
+ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-primary-dark);
+}
+
+h1 { font-size: var(--font-size-3xl); }
+h2 { font-size: var(--font-size-2xl); }
+h3 { font-size: var(--font-size-xl); }
+h4 { font-size: var(--font-size-lg); }
+h5 { font-size: var(--font-size-base); }
+h6 { font-size: var(--font-size-sm); }
+
+p {
+  margin-bottom: var(--spacing-md);
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-primary-light);
+}
+
+/**
+ * Boutons de base
+ */
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/**
+ * Utilitaires
+ */
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.font-bold { font-weight: 600; }
+.font-normal { font-weight: 400; }
+
+.text-sm { font-size: var(--font-size-sm); }
+.text-base { font-size: var(--font-size-base); }
+.text-lg { font-size: var(--font-size-lg); }
+
+.text-primary { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-muted { color: var(--color-text-muted); }
