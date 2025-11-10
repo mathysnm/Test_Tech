@@ -130,7 +130,7 @@
               </div>
               <div class="agent-stat">
                 <span class="stat-value-sm">{{ agent.resolvedToday }}</span>
-                <span class="stat-label-sm">Résolus</span>
+                <span class="stat-label-sm">Résolus auj.</span>
               </div>
               <div class="agent-stat">
                 <span class="stat-value-sm">{{ agent.avgTime }}h</span>

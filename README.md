@@ -92,7 +92,7 @@ Une fois démarrée, l'application est accessible sur :
 
 **CLIENT** :
 ```
-Email : marie@test.fr
+Email : marie.dubois@client.com
 Mot de passe : password123
 Rôle : ROLE_CLIENT
 Peut : Créer des tickets, voir ses tickets
@@ -100,7 +100,7 @@ Peut : Créer des tickets, voir ses tickets
 
 **AGENT** :
 ```
-Email : sophie@test.fr
+Email : sophie.bernard@support.com
 Mot de passe : password123
 Rôle : ROLE_AGENT
 Peut : Voir tickets assignés, changer statut, commenter
@@ -108,20 +108,20 @@ Peut : Voir tickets assignés, changer statut, commenter
 
 **MANAGER** :
 ```
-Email : thomas@test.fr
+Email : thomas.petit@manager.com
 Mot de passe : password123
 Rôle : ROLE_MANAGER
 Peut : Dashboard complet, voir tous les tickets, statistiques équipe
 ```
 
 **Autres comptes disponibles** :
-- Clients : `jean@test.fr`, `claire@test.fr`
-- Agents : `pierre@test.fr`, `lucas@test.fr`
+- Clients : `jean.martin@client.com`, `claire.rousseau@client.com`
+- Agents : `pierre.dupont@support.com`, `lucas.moreau@support.com`
 
 ### 🧪 Tester l'application
 
 #### Scénario 1 : Créer un ticket (CLIENT)
-1. Se connecter : http://localhost:5173/login avec `marie@test.fr`
+1. Se connecter : http://localhost:5173/login avec `marie.dubois@client.com`
 2. Cliquer sur "Créer un ticket"
 3. Remplir formulaire :
    - Titre : "Mon imprimante ne fonctionne plus"
@@ -132,7 +132,7 @@ Peut : Dashboard complet, voir tous les tickets, statistiques équipe
 6. ✅ Notification envoyée à l'agent assigné
 
 #### Scénario 2 : Traiter un ticket (AGENT)
-1. Se connecter : http://localhost:5173/login avec `sophie@test.fr`
+1. Se connecter : http://localhost:5173/login avec `sophie.bernard@support.com`
 2. Voir la liste des tickets assignés (triés du plus récent au plus ancien)
 3. Cliquer sur un ticket OPEN
 4. Changer statut : OPEN → IN_PROGRESS
@@ -143,7 +143,7 @@ Peut : Dashboard complet, voir tous les tickets, statistiques équipe
 9. ✅ Temps de résolution calculé automatiquement
 
 #### Scénario 3 : Dashboard Manager (MANAGER)
-1. Se connecter : http://localhost:5173/login avec `thomas@test.fr`
+1. Se connecter : http://localhost:5173/login avec `thomas.petit@manager.com`
 2. Accéder au Dashboard Manager (menu)
 3. Voir KPI :
    - Temps moyen résolution : **7.6 heures**
@@ -660,12 +660,12 @@ public function log(
 **Historique consultable** :
 ```
 Timeline Ticket #1234
-├── 2025-11-03 14:23 | marie@test.fr | TICKET_CREATED | Priorité: HIGH
+├── 2025-11-03 14:23 | marie.dubois@client.com | TICKET_CREATED | Priorité: HIGH
 ├── 2025-11-03 14:23 | SYSTEM | TICKET_ASSIGNED | Agent: Sophie
-├── 2025-11-03 15:45 | sophie@test.fr | STATUS_CHANGED | OPEN → IN_PROGRESS
-├── 2025-11-03 16:12 | sophie@test.fr | COMMENT_ADDED | "Analyse en cours"
-├── 2025-11-04 09:30 | sophie@test.fr | STATUS_CHANGED | IN_PROGRESS → RESOLVED
-└── 2025-11-04 10:00 | marie@test.fr | STATUS_CHANGED | RESOLVED → CLOSED
+├── 2025-11-03 15:45 | sophie.bernard@support.com | STATUS_CHANGED | OPEN → IN_PROGRESS
+├── 2025-11-03 16:12 | sophie.bernard@support.com | COMMENT_ADDED | "Analyse en cours"
+├── 2025-11-04 09:30 | sophie.bernard@support.com | STATUS_CHANGED | IN_PROGRESS → RESOLVED
+└── 2025-11-04 10:00 | marie.dubois@client.com | STATUS_CHANGED | RESOLVED → CLOSED
 ```
 
 ---
@@ -932,7 +932,7 @@ Une fois démarrée, l'application est accessible sur :
 
 **CLIENT** :
 ```
-Email : marie@test.fr
+Email : marie.dubois@client.com
 Mot de passe : password123
 Rôle : ROLE_CLIENT
 Peut : Créer des tickets, voir ses tickets
@@ -940,7 +940,7 @@ Peut : Créer des tickets, voir ses tickets
 
 **AGENT** :
 ```
-Email : sophie@test.fr
+Email : sophie.bernard@support.com
 Mot de passe : password123
 Rôle : ROLE_AGENT
 Peut : Voir tickets assignés, changer statut, commenter
@@ -948,22 +948,22 @@ Peut : Voir tickets assignés, changer statut, commenter
 
 **MANAGER** :
 ```
-Email : thomas@test.fr
+Email : thomas.petit@manager.com
 Mot de passe : password123
 Rôle : ROLE_MANAGER
 Peut : Dashboard complet, réassigner, voir tous les tickets
 ```
 
 **Autres comptes disponibles** :
-- Clients : `jean@test.fr`, `claire@test.fr`
-- Agents : `pierre@test.fr`, `lucas@test.fr`
+- Clients : `jean.martin@client.com`, `claire.rousseau@client.com`
+- Agents : `pierre.dupont@support.com`, `lucas.moreau@support.com`
 
 **Note importante** : Les utilisateurs sont chargés dynamiquement depuis la base de données. L'interface de login affiche automatiquement tous les comptes disponibles avec leur rôle respectif.
 
 ### 🧪 Tester l'application
 
 #### Scénario 1 : Créer un ticket (CLIENT)
-1. Se connecter : http://localhost:5173/login avec `marie@test.fr`
+1. Se connecter : http://localhost:5173/login avec `marie.dubois@client.com`
 2. Cliquer sur "Créer un ticket"
 3. Remplir formulaire :
    - Titre : "Mon imprimante ne fonctionne plus"
@@ -974,7 +974,7 @@ Peut : Dashboard complet, réassigner, voir tous les tickets
 6. ✅ Notification envoyée à l'agent assigné
 
 #### Scénario 2 : Traiter un ticket (AGENT)
-1. Se connecter : http://localhost:5173/login avec `sophie@test.fr`
+1. Se connecter : http://localhost:5173/login avec `sophie.bernard@support.com`
 2. Voir la liste des tickets assignés (badge nombre sur menu)
 3. Cliquer sur un ticket OPEN
 4. Changer statut : OPEN → IN_PROGRESS
@@ -985,7 +985,7 @@ Peut : Dashboard complet, réassigner, voir tous les tickets
 9. ✅ Temps de résolution calculé automatiquement
 
 #### Scénario 3 : Dashboard Manager (MANAGER)
-1. Se connecter : http://localhost:5173/login avec `thomas@test.fr`
+1. Se connecter : http://localhost:5173/login avec `thomas.petit@manager.com`
 2. Accéder au Dashboard Manager (menu)
 3. Voir KPI :
    - Temps moyen résolution : **7.6 heures**
@@ -1011,13 +1011,13 @@ docker exec tickets_app php bin/console doctrine:query:sql \
 
 #### Scénario 5 : Vérifier le filtrage par rôle
 1. **CLIENT** : Ne peut voir que ses propres tickets
-   - Se connecter avec `marie@test.fr`
+   - Se connecter avec `marie.dubois@client.com`
    - Liste affiche uniquement les tickets créés par Marie
 2. **AGENT** : Ne peut voir que les tickets assignés
-   - Se connecter avec `sophie@test.fr`
+   - Se connecter avec `sophie.bernard@support.com`
    - Liste affiche uniquement les tickets assignés à Sophie
 3. **MANAGER** : Peut voir tous les tickets
-   - Se connecter avec `thomas@test.fr`
+   - Se connecter avec `thomas.petit@manager.com`
    - Liste affiche tous les tickets du système
 
 ### 🧹 Commandes utiles
@@ -1328,8 +1328,8 @@ Response : 200 OK
     "description": "Le système refuse les cartes Visa",
     "priority": "HIGH",
     "status": "RESOLVED",
-    "creator": { "id": 1, "email": "marie@test.fr" },
-    "assignedTo": { "id": 4, "email": "sophie@test.fr" },
+    "creator": { "id": 1, "email": "marie.dubois@client.com" },
+    "assignedTo": { "id": 4, "email": "sophie.bernard@support.com" },
     "createdAt": "2025-11-02T14:23:12+00:00",
     "updatedAt": "2025-11-02T16:45:30+00:00"
   }
@@ -1345,13 +1345,13 @@ Response : 200 OK
   "logs": [
     {
       "action": "TICKET_CREATED",
-      "user": "marie@test.fr",
+      "user": "marie.dubois@client.com",
       "createdAt": "2025-11-02T14:23:12+00:00"
     },
     {
       "action": "STATUS_CHANGED",
       "details": { "old": "OPEN", "new": "IN_PROGRESS" },
-      "user": "sophie@test.fr",
+      "user": "sophie.bernard@support.com",
       "createdAt": "2025-11-02T15:10:05+00:00"
     }
   ]
@@ -1370,7 +1370,7 @@ Body :
 Response : 201 Created
 {
   "id": 41,
-  "assignedTo": { "id": 5, "email": "pierre@test.fr" },
+  "assignedTo": { "id": 5, "email": "pierre.dupont@support.com" },
   "status": "OPEN",
   ...
 }
@@ -1462,7 +1462,7 @@ Response : 200 OK
   "pendingTickets": 12,
   "teamPerformance": [
     {
-      "agent": "sophie@test.fr",
+      "agent": "sophie.bernard@support.com",
       "resolved": 12,
       "avgTime": 6.2,
       "efficiency": 82
